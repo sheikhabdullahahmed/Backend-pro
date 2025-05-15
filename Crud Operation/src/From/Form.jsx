@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Form() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate()
 
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
+  };
+const handleClick = async (e) => {
+  e.preventDefault();
 
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
+  try {
+    const response = await axios.post(
+      'https://6823bb3d65ba05803397bc76.mockapi.io/crud-todo',
+      { name, email }
+    );
+    console.log('Success:', response.data);
+  } catch (error) {
+    console.error('Error submitting form:', error);
+  }
+  navigate("/read")
+};
 
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: ''
-  });
-
- 
-const handleclick = () => {
-    
-}
   return (
     <div style={{
       display: 'flex',
@@ -23,15 +33,15 @@ const handleclick = () => {
       alignItems: 'center',
       height: '100vh'
     }}>
-      <form onSubmit={handleSubmit} style={{ maxWidth: '400px', width: '100%' }}>
+      <form onSubmit={handleClick} style={{ maxWidth: '400px', width: '100%' }}>
         <div style={{ marginBottom: '1rem' }}>
           <label htmlFor="name" style={{ display: 'block', marginBottom: '.5rem' }}>Name:</label>
           <input
             type="text"
             id="name"
             name="name"
-            value={formData.name}
-            onChange={(e) => setName(e.target.value) }
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
             style={{ width: '100%', padding: '.5rem' }}
           />
@@ -43,14 +53,14 @@ const handleclick = () => {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
-            onChange={(e) => setEmail(e.target.value) }
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
             style={{ width: '100%', padding: '.5rem' }}
           />
         </div>
 
-        <button type="submit" onClick={handleclick} style={{ padding: '.5rem 1rem' }}>Submit</button>
+        <button type="submit" style={{ padding: '.5rem 1rem' }}>Submit</button>
       </form>
     </div>
   );
